@@ -9,7 +9,7 @@ Simple cpu architecture in C.
 - Label handling and jump instructions
 - Basic stack operations (push, pop, call, ret)
 - Arithmetic, logic, and bitwise operations
-- Input/output instructions (print, input)
+- Debug instructions (print)
 - Import support for modules.
 - Subregister support (8, 16, 32-bit)
 - And more!
