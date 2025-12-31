@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
-#include <unistd.h>
+#include "portability.h"
 
 Flags flags = {0};
 
@@ -562,7 +562,7 @@ void interpret_easy64(const char *binname) {
         }
       }
 
-      long ret = syscall(syscall_id, args[0], args[1], args[2], args[3],
+      long ret = e_syscall(syscall_id, args[0], args[1], args[2], args[3],
                          args[4], args[5]);
 
       regsc[6].u64 = ret;

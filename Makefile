@@ -1,35 +1,45 @@
-CC = gcc
-TARGET = easy
-SOURCES = ./src/interpreter.c ./src/assembler.c ./src/cpu.c
-OBJECTS = $(SOURCES:.c=.o)
+CC      = clang
+TARGET  = easy
+
+SOURCES = ./src/interpreter.c \
+          ./src/assembler.c \
+          ./src/cpu.c
+
+OBJECTS = ${SOURCES:.c=.o}
 
 BASE_CFLAGS = -g -O2 -march=native
 LDFLAGS =
 
-NOR_FLAGS = $(BASE_CFLAGS)
+NOR_FLAGS = ${BASE_CFLAGS}
 
 SEC_FLAGS = \
-  -g -O2 -march=native \
-  -Wall -Wextra -Wpedantic \
-  -fstack-protector-strong -D_FORTIFY_SOURCE=2 \
-  -Wformat=2 -Wformat-security -Wstringop-overflow -Wnull-dereference \
-  -fanalyzer -Werror -Werror=unused-result \
-  -fsanitize=address,undefined -fno-omit-frame-pointer
+        -g -O2 -march=native \
+        -Wall -Wextra -Wpedantic \
+        -fstack-protector-strong -D_FORTIFY_SOURCE=2 \
+        -Wformat=2 -Wformat-security -Wstringop-overflow -Wnull-dereference \
+        -fanalyzer -Werror -Werror=unused-result \
+        -fsanitize=address,undefined -fno-omit-frame-pointer
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Suffix rule 
+.SUFFIXES: .c .o
 
-$(TARGET): $(OBJECTS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+.c.o:
+	${CC} ${CFLAGS} -c $< -o $@
+
+${TARGET}: ${OBJECTS}
+	${CC} -o ${TARGET} ${OBJECTS} ${LDFLAGS}
+
+nor: CFLAGS = ${NOR_FLAGS}
+nor: ${TARGET}
+
+sec: CFLAGS = ${SEC_FLAGS}
+sec: ${TARGET}
 
 minimize:
-	strip $(TARGET)
+	strip ${TARGET}
 
 clean:
-	rm -rf $(OBJECTS) $(TARGET) a.out
+	rm -f ${OBJECTS} ${TARGET} a.out
 
-nor: CFLAGS = $(NOR_FLAGS)
-nor: $(TARGET)
+.PHONY: nor sec clean minimize
 
-sec: CFLAGS = $(SEC_FLAGS)
-sec: $(TARGET)

@@ -47,6 +47,10 @@ start:       # start label
 ./easy -i a.out
 ```
 
+# Portability 
+Check the **"src/portability.h"**
+
+
 # License
 
 This project is licensed under the **GPL-3.0 License**.

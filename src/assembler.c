@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <threads.h>
+#include <pthread.h>
 
 int error_report = 0;
 int linecounter = 0;
