@@ -579,56 +579,56 @@ collect_data(char line[1024])
 				sections = SECTION_DATA;
 			}
 		}
-		int counteri = 0;
+		int 		counteri = 0;
 		while (counteri < count) {
-		if (count >= 2 && strcmp(tokens[counteri], "ascii") == 0 || strcmp(tokens[counteri], "ascii") == 0) {
-			if (strcmp(tokens[0], "ascii") != 0) {
-				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_ASCII);
-			}
-			for (int i = counteri + 1; i < count; i++) {
-				if (isdigit(tokens[i][0])) {
-					byte_offset += 1;
-					header.data_size += 1;
-					continue;
+			if (count >= 2 && strcmp(tokens[counteri], "ascii") == 0 || strcmp(tokens[counteri], "ascii") == 0) {
+				if (strcmp(tokens[0], "ascii") != 0) {
+					datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_ASCII);
 				}
-				for (int j = 0; j < strlen(tokens[i]); j++) {
-					if (tokens[i][j] == '\'') {
+				for (int i = counteri + 1; i < count; i++) {
+					if (isdigit(tokens[i][0])) {
 						byte_offset += 1;
 						header.data_size += 1;
-						j += 2;
 						continue;
 					}
-					byte_offset += 1;
-					header.data_size += 1;
+					for (int j = 0; j < strlen(tokens[i]); j++) {
+						if (tokens[i][j] == '\'') {
+							byte_offset += 1;
+							header.data_size += 1;
+							j += 2;
+							continue;
+						}
+						byte_offset += 1;
+						header.data_size += 1;
+					}
 				}
-			}
-		} else if (count >= 2 && strcmp(tokens[counteri], "byte") == 0 || strcmp(tokens[counteri], "byte") == 0) {
-			if (strcmp(tokens[0], "byte") != 0) {
-				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_BYTE);
-			}
-			byte_offset += 1;
-			header.data_size += 1;
-		} else if (count >= 2 && strcmp(tokens[counteri], "hword") == 0 || strcmp(tokens[counteri], "hword") == 0) {
-			if (strcmp(tokens[0], "hword") != 0) {
-				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_HWORD);
-			}
-			byte_offset += 2;
-			header.data_size += 2;
-		} else if (count >= 2 && strcmp(tokens[counteri], "word") == 0 || strcmp(tokens[counteri], "word") == 0) {
-			if (strcmp(tokens[0], "word") != 0) {
-				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_WORD);
-			}
-			byte_offset += 4;
-			header.data_size += 4;
-		} else if (count >= 2 && strcmp(tokens[counteri], "dword") == 0 || strcmp(tokens[counteri], "dword") == 0) {
-			if (strcmp(tokens[0], "dword") != 0) {
-				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_DWORD);
-			}
-			byte_offset += 8;
-			header.data_size += 8;
+			} else if (count >= 2 && strcmp(tokens[counteri], "byte") == 0 || strcmp(tokens[counteri], "byte") == 0) {
+				if (strcmp(tokens[0], "byte") != 0) {
+					datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_BYTE);
+				}
+				byte_offset += 1;
+				header.data_size += 1;
+			} else if (count >= 2 && strcmp(tokens[counteri], "hword") == 0 || strcmp(tokens[counteri], "hword") == 0) {
+				if (strcmp(tokens[0], "hword") != 0) {
+					datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_HWORD);
+				}
+				byte_offset += 2;
+				header.data_size += 2;
+			} else if (count >= 2 && strcmp(tokens[counteri], "word") == 0 || strcmp(tokens[counteri], "word") == 0) {
+				if (strcmp(tokens[0], "word") != 0) {
+					datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_WORD);
+				}
+				byte_offset += 4;
+				header.data_size += 4;
+			} else if (count >= 2 && strcmp(tokens[counteri], "dword") == 0 || strcmp(tokens[counteri], "dword") == 0) {
+				if (strcmp(tokens[0], "dword") != 0) {
+					datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_DWORD);
+				}
+				byte_offset += 8;
+				header.data_size += 8;
 
-		}
-		counteri++;
+			}
+			counteri++;
 		}
 	}
 	for (int i = 0; i < count; i++) {
