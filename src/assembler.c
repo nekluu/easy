@@ -567,18 +567,6 @@ write_bss(const char *asm_file, const char *out_file)
 	fclose(outfile);
 }
 
-int
-is_any_type(char *type)
-{
-	if (strcmp(type, "byte") == 0 ||
-	    strcmp(type, "hword") == 0 ||
-	    strcmp(type, "word") == 0 ||
-	    strcmp(type, "dword") == 0) {
-		return 1;
-	}
-	return 0;
-}
-
 void
 collect_data(char line[1024])
 {
@@ -591,9 +579,13 @@ collect_data(char line[1024])
 				sections = SECTION_DATA;
 			}
 		}
-		if (count >= 3 && strcmp(tokens[1], "ascii") == 0) {
-			datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_ASCII);
-			for (int i = 2; i < count; i++) {
+		int counteri = 0;
+		while (counteri < count) {
+		if (count >= 2 && strcmp(tokens[counteri], "ascii") == 0 || strcmp(tokens[counteri], "ascii") == 0) {
+			if (strcmp(tokens[0], "ascii") != 0) {
+				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_ASCII);
+			}
+			for (int i = counteri + 1; i < count; i++) {
 				if (isdigit(tokens[i][0])) {
 					byte_offset += 1;
 					header.data_size += 1;
@@ -610,31 +602,33 @@ collect_data(char line[1024])
 					header.data_size += 1;
 				}
 			}
-		} else if (count >= 2 && strcmp(tokens[1], "byte") == 0 || strcmp(tokens[0], "byte") == 0) {
+		} else if (count >= 2 && strcmp(tokens[counteri], "byte") == 0 || strcmp(tokens[counteri], "byte") == 0) {
 			if (strcmp(tokens[0], "byte") != 0) {
 				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_BYTE);
 			}
 			byte_offset += 1;
 			header.data_size += 1;
-		} else if (count >= 2 && strcmp(tokens[1], "hword") == 0 || strcmp(tokens[0], "hword") == 0) {
+		} else if (count >= 2 && strcmp(tokens[counteri], "hword") == 0 || strcmp(tokens[counteri], "hword") == 0) {
 			if (strcmp(tokens[0], "hword") != 0) {
 				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_HWORD);
 			}
 			byte_offset += 2;
 			header.data_size += 2;
-		} else if (count >= 2 && strcmp(tokens[1], "word") == 0 || strcmp(tokens[0], "word") == 0) {
+		} else if (count >= 2 && strcmp(tokens[counteri], "word") == 0 || strcmp(tokens[counteri], "word") == 0) {
 			if (strcmp(tokens[0], "word") != 0) {
 				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_WORD);
 			}
 			byte_offset += 4;
 			header.data_size += 4;
-		} else if (count >= 2 && strcmp(tokens[1], "dword") == 0 || strcmp(tokens[0], "dword") == 0) {
+		} else if (count >= 2 && strcmp(tokens[counteri], "dword") == 0 || strcmp(tokens[counteri], "dword") == 0) {
 			if (strcmp(tokens[0], "dword") != 0) {
 				datasp(tokens[0], byte_offset + sizeof(BinaryHeader), DATA_TYPE_DWORD);
 			}
 			byte_offset += 8;
 			header.data_size += 8;
 
+		}
+		counteri++;
 		}
 	}
 	for (int i = 0; i < count; i++) {
@@ -657,17 +651,18 @@ writer_data(char line[1024], FILE * outfile)
 		while (counteri < count) {
 			if (count >= 2 && strcmp(tokens[counteri], "ascii") == 0) {
 				int 		digit = 0;
-				for (int i = 2; i < count; i++) {
+				for (int i = counteri + 1; i < count; i++) {
 					if (isdigit(tokens[i][0])) {
 						digit = atoi(tokens[i]);
+
 						fputc(digit, outfile);
-						return -1;
+						continue;
 					}
 					for (int j = 0; j < strlen(tokens[i]); j++) {
 						if (tokens[i][j] == '\'') {
 							fputc(tokens[i][++j], outfile);
 							j++;
-							return -1;
+							continue;
 						}
 						fputc(tokens[i][j], outfile);
 					}
@@ -911,6 +906,8 @@ parser(const char *asm_file, const char *out_file)
 	write_bss(asm_file, out_file);
 	write_data(asm_file, out_file);
 	write_code(asm_file, out_file);
+
+
 	for (int i = 0; i < imported_count; i++) {
 		free(imported_files[i]);
 	}

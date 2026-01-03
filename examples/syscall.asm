@@ -8,14 +8,16 @@
 # r5 -> sixth
 # r6 -> return value
 
-section data 
-  msg ascii "hello!" 0
 
+section data 
+  msg ascii "Hello, " 10
+			ascii "World!" 10 
+			
 section code
 entry write
 write:
   mov 1, r0 
   mov msg, r1 
-  mov 7, r2
+  mov 15, r2
   syscall 1
    
