@@ -55,6 +55,9 @@ pub struct Interpreter {
     ///CPU flags.
     pub flags: Flags,
 }
+pub trait RegisterRead {
+    fn read(reg: &Register64) -> Self;
+}
 impl Interpreter {
     /// Reads the value of a register by index.
     pub fn read_reg(&self, idx: usize) -> u64 {
