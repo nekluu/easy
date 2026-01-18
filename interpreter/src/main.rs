@@ -2,8 +2,8 @@ mod interpreter;
 fn main() {
     let mut interp = interpreter::Interpreter {
         registers: [Default::default(); 20],
-        memory: [0; 65536],
-        zmemory: [0; 300],
+        memory: vec![],
+        zmemory: vec![],
         pc: 0,
         flags: interpreter::Flags {
             zero: 0,

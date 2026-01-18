@@ -44,12 +44,12 @@ pub struct Interpreter {
     pub registers: [Register64; 20],
     /// Memory
     ///
-    /// Memory size 65536.
-    pub memory: [u8; 65536],
+    /// Memory 
+    pub memory: Vec<u8>,
     /// Z memory
     ///
     /// Z memory size 300.
-    pub zmemory: [u8; 300],
+    pub zmemory: Vec<u8>,
     /// Program counter.
     pub pc: u64,
     ///CPU flags.
